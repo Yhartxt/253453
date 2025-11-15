@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrigonoLearn - Iniciar Sesión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: white;
+            color: #6366f1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 16px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background: #0f172a;
+            transform: translateY(-1px);
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            display: block;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo-container">
+            <div class="logo">
+                <span class="logo-icon">△</span>
+                TrigonoLearn
+            </div>
+            <p class="subtitle">Aprende trigonometría de forma divertida</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="cambiarTab('login')">Iniciar Sesión</button>
+            <button class="tab" onclick="cambiarTab('registro')">Registrarse</button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <!-- Formulario de Login -->
+        <div id="login-form" class="form-container active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="tu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="submit-button">Iniciar Sesión</button>
+            </form>
+        </div>
+
+        <!-- Formulario de Registro -->
+        <div id="registro-form" class="form-container">
+            <form onsubmit="handleRegistro(event)">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="registro-nombre" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="registro-email" placeholder="tu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="registro-password" placeholder="Mínimo 8 caracteres" required minlength="8">
+                </div>
+                <button type="submit" class="submit-button">Crear Cuenta</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function cambiarTab(tab) {
+            // Actualizar tabs
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Actualizar formularios
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            document.getElementById(tab + '-form').classList.add('active');
+
+            // Limpiar mensaje
+            document.getElementById('message').style.display = 'none';
+        }
+
+        function mostrarMensaje(texto, tipo) {
+            const mensaje = document.getElementById('message');
+            mensaje.textContent = texto;
+            mensaje.className = 'message ' + tipo;
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    mostrarMensaje('¡Bienvenido! Redirigiendo...', 'success');
+                    setTimeout(() => window.location.href = '/dashboard', 1000);
+                } else {
+                    mostrarMensaje(data.message, 'error');
+                }
+            } catch (error) {
+                mostrarMensaje('Error al conectar con el servidor', 'error');
+            }
+        }
+
+        async function handleRegistro(e) {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('registro-nombre').value;
+            const email = document.getElementById('registro-email').value;
+            const password = document.getElementById('registro-password').value;
+
+            try {
+                const response = await fetch('/api/registro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    mostrarMensaje('¡Cuenta creada! Redirigiendo...', 'success');
+                    setTimeout(() => window.location.href = '/dashboard', 1000);
+                } else {
+                    mostrarMensaje(data.message, 'error');
+                }
+            } catch (error) {
+                mostrarMensaje('Error al conectar con el servidor', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

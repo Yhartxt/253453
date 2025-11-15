@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrigonoLearn - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #6366f1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            font-size: 1.2rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 1.2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .progress-card {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        .progress-card h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .lessons-header {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #1e293b;
+        }
+
+        .lessons-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .lesson-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .lesson-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .lesson-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .lesson-card.locked:hover {
+            transform: none;
+        }
+
+        .lesson-card.completed {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .lesson-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+
+        .lesson-content {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .lesson-description {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .lesson-xp {
+            background: #ede9fe;
+            color: #6366f1;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .lesson-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .lock-icon {
+            color: #cbd5e1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <span>△</span>
+                TrigonoLearn
+            </div>
+            <div class="user-info">
+                <div class="stat">
+                    <span class="stat-icon">⭐</span>
+                    <span id="user-xp">0 XP</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">🏆</span>
+                    <span id="user-nivel">Nivel 1</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">🔥</span>
+                    <span id="user-racha">0 días</span>
+                </div>
+                <div class="user-avatar" id="user-avatar">U</div>
+                <button class="logout-btn" onclick="logout()" title="Cerrar sesión">🚪</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="progress-card">
+            <h2>Tu Progreso</h2>
+            <div class="progress-info">
+                <span id="progress-text">Lecciones completadas: 0 / 6</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <h2 class="lessons-header">Lecciones</h2>
+        <div id="lessons-grid" class="lessons-grid">
+            <div class="loading">Cargando lecciones...</div>
+        </div>
+    </div>
+
+    <script>
+        async function cargarDatosUsuario() {
+            try {
+                const response = await fetch('/api/usuario');
+                const usuario = await response.json();
+
+                document.getElementById('user-xp').textContent = usuario.xp + ' XP';
+                document.getElementById('user-nivel').textContent = 'Nivel ' + usuario.nivel;
+                document.getElementById('user-racha').textContent = usuario.racha_dias + ' días';
+                
+                const inicial = usuario.nombre.charAt(0).toUpperCase();
+                document.getElementById('user-avatar').textContent = inicial;
+            } catch (error) {
+                console.error('Error al cargar datos del usuario:', error);
+            }
+        }
+
+        async function cargarLecciones() {
+            try {
+                const response = await fetch('/api/lecciones');
+                const lecciones = await response.json();
+
+                const grid = document.getElementById('lessons-grid');
+                grid.innerHTML = '';
+
+                const completadas = lecciones.filter(l => l.completada).length;
+                const total = lecciones.length;
+                const porcentaje = Math.round((completadas / total) * 100);
+
+                document.getElementById('progress-text').textContent = 
+                    `Lecciones completadas: ${completadas} / ${total}`;
+                document.getElementById('progress-percent').textContent = porcentaje + '%';
+                document.getElementById('progress-fill').style.width = porcentaje + '%';
+
+                lecciones.forEach(leccion => {
+                    const card = document.createElement('div');
+                    card.className = 'lesson-card';
+                    
+                    if (leccion.completada) {
+                        card.classList.add('completed');
+                    }
+                    if (!leccion.desbloqueada) {
+                        card.classList.add('locked');
+                    }
+
+                    const iconos = {
+                        1: '📐',
+                        2: '📊',
+                        3: '⭕',
+                        4: '🔢',
+                        5: '△',
+                        6: '🌍'
+                    };
+
+                    card.innerHTML = `
+                        <div class="lesson-icon">${iconos[leccion.id] || '📚'}</div>
+                        <div class="lesson-content">
+                            <div class="lesson-title">${leccion.titulo}</div>
+                            <div class="lesson-description">${leccion.descripcion}</div>
+                        </div>
+                        <div class="lesson-xp">+${leccion.xp_recompensa} XP</div>
+                        ${leccion.completada ? '<div class="lesson-status">✅</div>' : ''}
+                        ${!leccion.desbloqueada ? '<div class="lesson-status lock-icon">🔒</div>' : ''}
+                        ${!leccion.completada && leccion.desbloqueada ? '<div class="lesson-status">▶️</div>' : ''}
+                    `;
+
+                    if (leccion.desbloqueada) {
+                        card.onclick = () => {
+                            window.location.href = `/leccion/${leccion.id}`;
+                        };
+                    }
+
+                    grid.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error al cargar lecciones:', error);
+            }
+        }
+
+        async function logout() {
+            if (confirm('¿Seguro que quieres cerrar sesión?')) {
+                try {
+                    await fetch('/api/logout', { method: 'POST' });
+                    window.location.href = '/';
+                } catch (error) {
+                    console.error('Error al cerrar sesión:', error);
+                }
+            }
+        }
+
+        // Cargar datos al iniciar
+        cargarDatosUsuario();
+        cargarLecciones();
+    </script>
+</body>
+</html>

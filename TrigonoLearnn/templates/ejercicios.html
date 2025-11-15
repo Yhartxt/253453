@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrigonoLearn - Ejercicios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #6366f1;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 30px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .exercise-card {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .exercise-header {
+            margin-bottom: 40px;
+        }
+
+        .exercise-number {
+            color: #6366f1;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .exercise-question {
+            font-size: 1.8rem;
+            color: #1e293b;
+            line-height: 1.4;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            padding: 20px 25px;
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            border-color: #6366f1;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #6366f1;
+            background: #f0f9ff;
+        }
+
+        .option.correct {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .option-letter {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #64748b;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-letter {
+            background: #6366f1;
+            color: white;
+        }
+
+        .option.correct .option-letter {
+            background: #22c55e;
+            color: white;
+        }
+
+        .option.incorrect .option-letter {
+            background: #ef4444;
+            color: white;
+        }
+
+        .feedback {
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #f0fdf4;
+            border: 2px solid #22c55e;
+        }
+
+        .feedback.incorrect {
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .feedback.correct .feedback-header {
+            color: #16a34a;
+        }
+
+        .feedback.incorrect .feedback-header {
+            color: #dc2626;
+        }
+
+        .feedback-text {
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .feedback-points {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #fef3c7;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #92400e;
+            margin-top: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-success {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #16a34a;
+        }
+
+        .completion-card {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .completion-icon {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            animation: bounce 1s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .completion-title {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+
+        .completion-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            padding: 20px 30px;
+            border-radius: 15px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6366f1;
+        }
+
+        .stat-label {
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">△ TrigonoLearn</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="nav-progress"></div>
+                </div>
+                <div class="progress-text" id="nav-progress-text">0 / 0</div>
+            </div>
+            <div></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="exercise-container" class="loading">
+            Cargando ejercicios...
+        </div>
+    </div>
+
+    <script>
+        const leccionId = {{ leccion_id }};
+        let ejercicios = [];
+        let indiceActual = 0;
+        let respuestaSeleccionada = null;
+        let puntosGanados = 0;
+        let correctas = 0;
+
+        async function cargarEjercicios() {
+            try {
+                const response = await fetch(`/api/ejercicios/${leccionId}`);
+                ejercicios = await response.json();
+                
+                if (ejercicios.length === 0) {
+                    document.getElementById('exercise-container').innerHTML = `
+                        <div class="exercise-card">
+                            <p style="text-align: center; color: #64748b;">No hay ejercicios disponibles para esta lección.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                mostrarEjercicio();
+            } catch (error) {
+                console.error('Error al cargar ejercicios:', error);
+                document.getElementById('exercise-container').innerHTML = `
+                    <div class="exercise-card">
+                        <p style="text-align: center; color: #ef4444;">Error al cargar los ejercicios</p>
+                    </div>
+                `;
+            }
+        }
+
+        function mostrarEjercicio() {
+            const ejercicio = ejercicios[indiceActual];
+            respuestaSeleccionada = null;
+
+            // Actualizar barra de progreso
+            const progreso = ((indiceActual + 1) / ejercicios.length) * 100;
+            document.getElementById('nav-progress').style.width = progreso + '%';
+            document.getElementById('nav-progress-text').textContent = 
+                `${indiceActual + 1} / ${ejercicios.length}`;
+
+            const letras = ['A', 'B', 'C', 'D', 'E', 'F'];
+            const opcionesHTML = ejercicio.opciones.map((opcion, index) => `
+                <div class="option" onclick="seleccionarOpcion(${index})">
+                    <div class="option-letter">${letras[index]}</div>
+                    <div>${opcion}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('exercise-container').innerHTML = `
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-number">Ejercicio ${indiceActual + 1} de ${ejercicios.length}</div>
+                        <div class="exercise-question">${ejercicio.pregunta}</div>
+                    </div>
+
+                    <div class="options-container" id="options-container">
+                        ${opcionesHTML}
+                    </div>
+
+                    <div class="feedback" id="feedback"></div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="check-btn" onclick="verificarRespuesta()" disabled>
+                            Verificar Respuesta
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function seleccionarOpcion(index) {
+            if (respuestaSeleccionada !== null) return;
+
+            const opciones = document.querySelectorAll('.option');
+            opciones.forEach(opt => opt.classList.remove('selected'));
+            opciones[index].classList.add('selected');
+
+            respuestaSeleccionada = index;
+            document.getElementById('check-btn').disabled = false;
+        }
+
+        async function verificarRespuesta() {
+            if (respuestaSeleccionada === null) return;
+
+            const ejercicio = ejercicios[indiceActual];
+            const respuesta = ejercicio.opciones[respuestaSeleccionada];
+
+            document.getElementById('check-btn').disabled = true;
+
+            try {
+                const response = await fetch('/api/verificar_respuesta', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ejercicio_id: ejercicio.id,
+                        respuesta: respuesta
+                    })
+                });
+
+                const resultado = await response.json();
+
+                // Mostrar feedback
+                const feedback = document.getElementById('feedback');
+                feedback.className = 'feedback show ' + (resultado.correcta ? 'correct' : 'incorrect');
+                
+                feedback.innerHTML = `
+                    <div class="feedback-header">
+                        ${resultado.correcta ? '✅ ¡Correcto!' : '❌ Incorrecto'}
+                    </div>
+                    <div class="feedback-text">
+                        ${resultado.explicacion}
+                        ${resultado.correcta ? `<div class="feedback-points">+${resultado.puntos} puntos ⭐</div>` : ''}
+                    </div>
+                `;
+
+                // Marcar opciones
+                const opciones = document.querySelectorAll('.option');
+                opciones.forEach((opt, idx) => {
+                    opt.classList.add('disabled');
+                    if (ejercicio.opciones[idx] === ejercicio.respuesta_correcta) {
+                        opt.classList.add('correct');
+                    } else if (idx === respuestaSeleccionada && !resultado.correcta) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+
+                if (resultado.correcta) {
+                    puntosGanados += resultado.puntos;
+                    correctas++;
+                }
+
+                // Cambiar botón
+                const container = document.querySelector('.action-buttons');
+                if (indiceActual < ejercicios.length - 1) {
+                    container.innerHTML = `
+                        <button class="btn btn-success" onclick="siguienteEjercicio()">
+                            Siguiente Ejercicio →
+                        </button>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <button class="btn btn-success" onclick="completarLeccion()">
+                            Finalizar Lección 🎉
+                        </button>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error al verificar respuesta:', error);
+                alert('Error al verificar la respuesta');
+            }
+        }
+
+        function siguienteEjercicio() {
+            indiceActual++;
+            mostrarEjercicio();
+        }
+
+        async function completarLeccion() {
+            const puntuacion = Math.round((correctas / ejercicios.length) * 100);
+
+            try {
+                const response = await fetch('/api/completar_leccion', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        leccion_id: leccionId,
+                        puntuacion: puntuacion
+                    })
+                });
+
+                const resultado = await response.json();
+
+                document.getElementById('exercise-container').innerHTML = `
+                    <div class="exercise-card completion-card">
+                        <div class="completion-icon">🎉</div>
+                        <h2 class="completion-title">¡Lección Completada!</h2>
+                        <p style="color: #64748b; font-size: 1.1rem;">Excelente trabajo. Has completado todos los ejercicios.</p>
+                        
+                        <div class="completion-stats">
+                            <div class="stat-box">
+                                <div class="stat-value">${correctas}/${ejercicios.length}</div>
+                                <div class="stat-label">Correctas</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">${puntuacion}%</div>
+                                <div class="stat-label">Puntuación</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">+${resultado.xp_ganado}</div>
+                                <div class="stat-label">XP Ganado</div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="window.location.href='/dashboard'">
+                                Volver al Dashboard
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error al completar lección:', error);
+                alert('Error al completar la lección');
+            }
+        }
+
+        cargarEjercicios();
+    </script>
+</body>
+</html>
